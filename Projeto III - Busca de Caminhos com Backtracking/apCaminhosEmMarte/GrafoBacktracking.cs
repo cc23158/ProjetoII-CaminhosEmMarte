@@ -155,6 +155,88 @@ namespace apCidadesBacktracking
             }
         }
 
+        public List<PilhaVetor<Movimento>> BuscarTodosOsCaminhos(int origem, int destino)
+        {
+            // variáveis que armazenarão os caminhos
+            List<PilhaVetor<Movimento>> listaDeCaminhos = new List<PilhaVetor<Movimento>>();
+            PilhaVetor<Movimento> pilha = new PilhaVetor<Movimento>();
+
+            bool[] passou = new bool[qtasCidades];
+            int cidadeAtual, saidaAtual;
+
+            // inicia os valores de "passou" pois ainda não foi em nenhuma cidade
+            for (int indice = 0; indice < qtasCidades; indice++)
+                passou[indice] = false;
+
+            cidadeAtual = origem;
+            saidaAtual = 0;
+
+            while (saidaAtual < qtasCidades)
+            {
+                while (saidaAtual < qtasCidades)
+                {
+
+
+                    // se chegamos ao destino
+                    if (saidaAtual == destino)
+                    {
+                        // criamos o movimento
+                        // empilhamos o movimento
+                        // inserimos o caminho na lista
+                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
+                        pilha.Empilhar(movim);
+
+                        // adiciona uma cópia da pilha atual à lista de caminhos para que sejam retornadas as rotas corretamente
+                        PilhaVetor<Movimento> caminhoEncontrado = ClonarPilha(pilha);
+                        listaDeCaminhos.Add(caminhoEncontrado);                        
+
+                        break;
+                    }
+
+                    // se não tem nada
+                    else if (matriz[cidadeAtual, saidaAtual] == 0)
+                        saidaAtual++;
+
+                    // se já passou na próxima cidade
+                    else if (passou[saidaAtual])
+                        saidaAtual++;
+
+                    else
+                    {
+                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
+                        pilha.Empilhar(movim);
+                        passou[cidadeAtual] = true;
+                        cidadeAtual = saidaAtual; // muda para a nova cidade
+                        saidaAtual = 0; // reinicia busca de saídas da nova
+                                        // cidade a partir da primeira cidade
+                    }
+                }
+
+                if (pilha.Tamanho > 0)
+                {
+                    // volta uma cidadeAtual para verificar outros caminhos
+                    Movimento movimento = pilha.Desempilhar();
+                    passou[cidadeAtual] = false; // marca a cidade atual como não visitada
+                    cidadeAtual = movimento.Origem;
+                    saidaAtual = movimento.Destino + 1;
+                }
+            }
+
+            return listaDeCaminhos;
+        }
+
+        public PilhaVetor<Movimento> ClonarPilha(PilhaVetor<Movimento> pilha)
+        {
+            PilhaVetor<Movimento> novaPilha = new PilhaVetor<Movimento>(pilha.Tamanho);
+            List<Movimento> elementos = pilha.Conteudo();
+
+            // cria uma nova pilha e empilha os elementos na mesma ordem
+            foreach (Movimento mov in elementos)
+                novaPilha.Empilhar(mov);
+
+            return novaPilha;
+        }
+
         public string[,] LerDados(string arquivoDeLeitura)
         {
             // pegamos todas as linhas do arquivo de leitura

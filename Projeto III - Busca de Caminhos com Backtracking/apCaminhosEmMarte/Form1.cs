@@ -203,5 +203,16 @@ namespace apCaminhosEmMarte
         {
             grafo.Exibir(dgvCaminhos);
         }
+
+        private void btnBuscarCaminho_Click(object sender, EventArgs e)
+        {
+            // pegamos as cidades de origem e destino e buscamos os caminhos
+            int cidadeOrigem  = cbxOrigem.SelectedIndex;
+            int cidadeDestino = cbxDestino.SelectedIndex;
+
+            List<PilhaVetor<Movimento>> caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
+
+            Console.WriteLine("Funcionou");
+        }
     }
 }

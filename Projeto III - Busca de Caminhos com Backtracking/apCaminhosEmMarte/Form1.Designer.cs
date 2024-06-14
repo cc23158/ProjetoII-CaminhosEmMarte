@@ -52,6 +52,7 @@
             this.tpCaminhos = new System.Windows.Forms.TabPage();
             this.dgvMelhorCaminho = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnBuscarCaminho = new System.Windows.Forms.Button();
             this.dgvCaminhos = new System.Windows.Forms.DataGridView();
             this.btnAlterarCaminho = new System.Windows.Forms.Button();
             this.btnExcluirCaminho = new System.Windows.Forms.Button();
@@ -67,7 +68,6 @@
             this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
             this.dlgAbrirCidades = new System.Windows.Forms.OpenFileDialog();
             this.dlgAbrirCaminhos = new System.Windows.Forms.OpenFileDialog();
-            this.btnBuscarCaminho = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tpCidades.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).BeginInit();
@@ -349,6 +349,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Caminhos";
             // 
+            // btnBuscarCaminho
+            // 
+            this.btnBuscarCaminho.Location = new System.Drawing.Point(137, 24);
+            this.btnBuscarCaminho.Name = "btnBuscarCaminho";
+            this.btnBuscarCaminho.Size = new System.Drawing.Size(75, 23);
+            this.btnBuscarCaminho.TabIndex = 11;
+            this.btnBuscarCaminho.Text = "Buscar";
+            this.btnBuscarCaminho.UseVisualStyleBackColor = true;
+            this.btnBuscarCaminho.Click += new System.EventHandler(this.btnBuscarCaminho_Click);
+            // 
             // dgvCaminhos
             // 
             this.dgvCaminhos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -476,15 +486,6 @@
             // dlgAbrirCaminhos
             // 
             this.dlgAbrirCaminhos.FileName = "openFileDialog1";
-            // 
-            // btnBuscarCaminho
-            // 
-            this.btnBuscarCaminho.Location = new System.Drawing.Point(137, 24);
-            this.btnBuscarCaminho.Name = "btnBuscarCaminho";
-            this.btnBuscarCaminho.Size = new System.Drawing.Size(75, 23);
-            this.btnBuscarCaminho.TabIndex = 11;
-            this.btnBuscarCaminho.Text = "Buscar";
-            this.btnBuscarCaminho.UseVisualStyleBackColor = true;
             // 
             // FrmCaminhos
             // 
