@@ -1,0 +1,78 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|c:\\users\\vymim\\onedrive\\\u00E1rea de trabalho\\chico\\projeto iii - busca de caminhos com backtracking\\projeto iii - busca de caminhos com backtracking\\apcaminhosemmarte\\grafobacktracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|solutionrelative:grafobacktracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|solutionrelative:Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BFF72FC-D969-44C6-9D55-90B066379B1F}|apCaminhosEmMarte.csproj|solutionrelative:Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs",
+              "RelativeDocumentMoniker": "Form1.cs",
+              "ToolTip": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs",
+              "RelativeToolTip": "Form1.cs",
+              "ViewState": "AQIAAJsAAAAAAAAAAAAAwKcAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-30T18:12:41.368Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GrafoBacktracking.cs",
+              "DocumentMoniker": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\GrafoBacktracking.cs",
+              "RelativeDocumentMoniker": "GrafoBacktracking.cs",
+              "ToolTip": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\GrafoBacktracking.cs",
+              "RelativeToolTip": "GrafoBacktracking.cs",
+              "ViewState": "AQIAAPAAAAAAAAAAAADwvw8BAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-30T18:12:21.28Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs",
+              "RelativeDocumentMoniker": "Form1.cs",
+              "ToolTip": "C:\\Users\\vymim\\OneDrive\\\u00C1rea de Trabalho\\Chico\\Projeto III - Busca de Caminhos com Backtracking\\Projeto III - Busca de Caminhos com Backtracking\\apCaminhosEmMarte\\Form1.cs [Design]",
+              "RelativeToolTip": "Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-30T18:11:53.878Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
