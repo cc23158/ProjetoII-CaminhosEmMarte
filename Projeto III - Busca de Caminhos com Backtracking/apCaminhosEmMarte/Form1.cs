@@ -114,7 +114,7 @@ namespace apCaminhosEmMarte
                 // copiar os nomes de cada cidade nos cbxOrigem e cbxDestino
                 CopiarNomes(cbxOrigem);
                 CopiarNomes(cbxDestino);
-                AtualizarTela();
+                AtualizarTela(dgvCaminhos);
             }
         }
 
@@ -166,7 +166,7 @@ namespace apCaminhosEmMarte
                 decimal distancia = udDistancia.Value;
 
                 grafo.CriarLigacao(indexLinha, indexColuna, distancia);
-                AtualizarTela();
+                AtualizarTela(dgvCaminhos);
             }
         }
 
@@ -180,7 +180,7 @@ namespace apCaminhosEmMarte
                 int indexColuna = cbxDestino.SelectedIndex;
 
                 grafo.ExcluirLigacao(indexLinha, indexColuna);
-                AtualizarTela();
+                AtualizarTela(dgvCaminhos);
             }
         }
 
@@ -195,13 +195,13 @@ namespace apCaminhosEmMarte
                 decimal distancia = udDistancia.Value;
 
                 grafo.AlterarLigacao(indexLinha, indexColuna, distancia);
-                AtualizarTela();
+                AtualizarTela(dgvCaminhos);
             }
         }
 
-        private void AtualizarTela()
+        private void AtualizarTela(DataGridView dgv)
         {
-            grafo.Exibir(dgvCaminhos);
+            grafo.Exibir(dgv);
         }
 
         private void btnBuscarCaminho_Click(object sender, EventArgs e)
@@ -210,9 +210,39 @@ namespace apCaminhosEmMarte
             int cidadeOrigem  = cbxOrigem.SelectedIndex;
             int cidadeDestino = cbxDestino.SelectedIndex;
 
+            int origem, destino, distancia, menorDistancia = Int32.MaxValue;
+            PilhaVetor<Movimento> menorRota = new PilhaVetor<Movimento>();
+            PilhaVetor<Movimento> cloneRota = new PilhaVetor<Movimento>();
+            PilhaVetor<Movimento> rotaAux = new PilhaVetor<Movimento>();
+
             List<PilhaVetor<Movimento>> caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
 
-            Console.WriteLine("Funcionou");
+            // buscamos o menr caminho dentre todos os encontrados
+            foreach(PilhaVetor<Movimento> rota in caminhos)
+            {
+                distancia = 0;
+                cloneRota = grafo.ClonarPilha(rota);
+                while (!rota.EstaVazia)
+                {
+                    Movimento movim = rota.Desempilhar();
+                    origem = movim.Origem;
+                    destino = movim.Destino;
+
+                    distancia += grafo.Matriz[origem, destino];
+                }
+
+                if (distancia < menorDistancia)
+                {
+                    menorDistancia = distancia;
+                    rotaAux = cloneRota;
+                }
+            }
+
+            // preparamos a rota para inserí-la no listBox
+            while(!rotaAux.EstaVazia)
+                menorRota.Empilhar(rotaAux.Desempilhar());
+
+            AtualizarTela(dgvMelhorCaminho);
         }
     }
 }

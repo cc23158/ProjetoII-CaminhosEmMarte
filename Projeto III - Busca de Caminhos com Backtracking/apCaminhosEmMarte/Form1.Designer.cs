@@ -322,9 +322,9 @@
             this.dgvMelhorCaminho.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvMelhorCaminho.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMelhorCaminho.Location = new System.Drawing.Point(275, 276);
+            this.dgvMelhorCaminho.Location = new System.Drawing.Point(275, 258);
             this.dgvMelhorCaminho.Name = "dgvMelhorCaminho";
-            this.dgvMelhorCaminho.Size = new System.Drawing.Size(401, 52);
+            this.dgvMelhorCaminho.Size = new System.Drawing.Size(401, 70);
             this.dgvMelhorCaminho.TabIndex = 15;
             // 
             // groupBox2
@@ -469,7 +469,7 @@
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(275, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(401, 264);
+            this.pictureBox1.Size = new System.Drawing.Size(401, 246);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
