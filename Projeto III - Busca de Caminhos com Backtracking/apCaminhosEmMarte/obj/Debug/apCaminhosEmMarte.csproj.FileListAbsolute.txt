@@ -68,3 +68,13 @@ C:\Users\vymim\OneDrive\Área de Trabalho\ProjetoII-CaminhosEmMarte\Projeto III 
 C:\Users\vymim\OneDrive\Área de Trabalho\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.exe.config
 C:\Users\vymim\OneDrive\Área de Trabalho\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.exe
 C:\Users\vymim\OneDrive\Área de Trabalho\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.pdb
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.exe.config
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.exe
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\bin\Debug\apCaminhosEmMarte.pdb
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.csproj.AssemblyReference.cache
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.FrmCaminhos.resources
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.Properties.Resources.resources
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.csproj.GenerateResource.cache
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.csproj.CoreCompileInputs.cache
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.exe
+C:\Users\u23158\Desktop\ProjetoII-CaminhosEmMarte\Projeto III - Busca de Caminhos com Backtracking\apCaminhosEmMarte\obj\Debug\apCaminhosEmMarte.pdb

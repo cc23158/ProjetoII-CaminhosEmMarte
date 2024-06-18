@@ -80,6 +80,8 @@ namespace apCaminhosEmMarte
         Cidade[] asCidades;
         int quantasCidades;   // tamanho lógico
         GrafoBacktracking grafo;
+        int menorDistancia = Int32.MaxValue;
+        List<PilhaVetor<Movimento>> caminhos;
 
         private void tpCaminhos_Enter(object sender, EventArgs e)
         {
@@ -201,7 +203,31 @@ namespace apCaminhosEmMarte
 
         private void AtualizarTela(DataGridView dgv)
         {
-            grafo.Exibir(dgv);
+            grafo.Exibir(dgvCaminhos);
+        }
+
+        private void AtualizarTela(DataGridView dgv, PilhaVetor<Movimento> rota)
+        {
+            string caminho = "";
+
+            // 1 -> 2
+            // 2 -> 6
+            if (!rota.EstaVazia)
+            {
+                List<Movimento> movim = rota.Conteudo();
+                caminho = movim[0].Origem.ToString();
+
+                foreach (Movimento movimento in movim)
+                    caminho += " -> " + movimento.Destino.ToString();
+
+                dgv.Rows.Clear();
+                dgv.Refresh();
+                dgv.RowCount = dgv.ColumnCount = 1;
+
+                dgv.Columns[0].HeaderText = "Menor Rota";
+                dgv.Rows[0].HeaderCell.Value = caminho;
+                dgv.Columns[0].Width = 300;
+            }
         }
 
         private void btnBuscarCaminho_Click(object sender, EventArgs e)
@@ -210,12 +236,12 @@ namespace apCaminhosEmMarte
             int cidadeOrigem  = cbxOrigem.SelectedIndex;
             int cidadeDestino = cbxDestino.SelectedIndex;
 
-            int origem, destino, distancia, menorDistancia = Int32.MaxValue;
+            int origem, destino, distancia;
             PilhaVetor<Movimento> menorRota = new PilhaVetor<Movimento>();
             PilhaVetor<Movimento> cloneRota = new PilhaVetor<Movimento>();
             PilhaVetor<Movimento> rotaAux = new PilhaVetor<Movimento>();
 
-            List<PilhaVetor<Movimento>> caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
+            caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
 
             // buscamos o menr caminho dentre todos os encontrados
             foreach(PilhaVetor<Movimento> rota in caminhos)
@@ -238,11 +264,15 @@ namespace apCaminhosEmMarte
                 }
             }
 
+            menorRota = rotaAux;
+
             // preparamos a rota para inserí-la no listBox
+            /*
             while(!rotaAux.EstaVazia)
                 menorRota.Empilhar(rotaAux.Desempilhar());
 
-            AtualizarTela(dgvMelhorCaminho);
+            */
+            AtualizarTela(dgvMelhorCaminho, menorRota);
         }
     }
 }

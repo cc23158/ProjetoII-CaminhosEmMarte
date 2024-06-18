@@ -51,6 +51,7 @@ namespace apCidadesBacktracking
         public int QtasCidades { get => qtasCidades; set => qtasCidades = value; }
         public int[,] Matriz { get => matriz; set => matriz = value; }
 
+        // exibe apenas os dados dos arquivos .txt
         public void Exibir(DataGridView dgv)
         {
             dgv.Rows.Clear();
@@ -86,7 +87,7 @@ namespace apCidadesBacktracking
             cidadeAtual = origem;
             saidaAtual = 0;
 
-            while (saidaAtual < qtasCidades)
+            while (true)
             {
                 while (saidaAtual < qtasCidades)
                 {
@@ -130,10 +131,10 @@ namespace apCidadesBacktracking
                 if (pilha.Tamanho > 0)
                 {
                     // volta uma cidadeAtual para verificar outros caminhos
-                    Movimento movimento = pilha.Desempilhar();
-                    passou[cidadeAtual] = false; // marca a cidade atual como não visitada
+                    Movimento movimento = pilha.Desempilhar();                    
                     cidadeAtual = movimento.Origem;
                     saidaAtual = movimento.Destino + 1;
+                    passou[cidadeAtual] = false; // marca a cidade atual como não visitada
                 }
             }
 
@@ -183,35 +184,38 @@ namespace apCidadesBacktracking
         {
             // ordenação alfabética de acordo com o nome
             // da cidade de origem do caminho
-            for (int index = 1; index < matrizDados.Length/3; index++)
+            for (int index = 1; index < matrizDados.Length / 3; index++)
             {
                 string cidadeDeOrigem = matrizDados[index, 0];
-                string conteudoLinha = matrizDados[index, 1];
+                string cidadeDeDestino = matrizDados[index, 1];
+                string conteudo = matrizDados[index, 2];
 
-                int left = 0;
-                int right = index;
+                int esquerda = 0;
+                int direita = index;
 
                 // Busca binária para encontrar a posição correta do elemento
-                while (left < right)
+                while (esquerda < direita)
                 {
-                    int mid = (left + right) / 2;
+                    int mid = (esquerda + direita) / 2;
                     if (string.Compare(cidadeDeOrigem, matrizDados[mid, 0]) >= 0)
-                        left = mid + 1;
+                        esquerda = mid + 1;
                     
                     else
-                        right = mid;
+                        direita = mid;
                 }
 
                 // Move todos os elementos para abrir espaço para o elemento chave
-                for (int j = index; j > left; j--)
+                for (int j = index; j > esquerda; j--)
                 {
                     matrizDados[j, 0] = matrizDados[j - 1, 0];
                     matrizDados[j, 1] = matrizDados[j - 1, 1];
+                    matrizDados[j, 2] = matrizDados[j - 1, 2];
                 }
 
                 // Insere o elemento chave na posição encontrada
-                matrizDados[left, 0] = cidadeDeOrigem;
-                matrizDados[left, 1] = conteudoLinha;
+                matrizDados[esquerda, 0] = cidadeDeOrigem;
+                matrizDados[esquerda, 1] = cidadeDeDestino;
+                matrizDados[esquerda, 2] = conteudo;
             }
         }
 
@@ -220,7 +224,6 @@ namespace apCidadesBacktracking
             for (int index = 0; index < asCidades.Length; index++)
                 if (asCidades[index] != null && asCidades[index].NomeCidade == cidadeProcurada)
                     return index;
-            //if(cidade )
 
             return -1;
         }
