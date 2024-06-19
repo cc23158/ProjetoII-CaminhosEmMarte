@@ -15,20 +15,25 @@ namespace apCidadesBacktracking
     class GrafoBacktracking
     {
         const int tamanhoDistancia = 4;
-        char tipoGrafo;
         int qtasCidades;
         int[,] matriz;
+        string[] nomeCidades;
 
         public GrafoBacktracking(string nomeArquivo, Cidade[] asCidades)
         {
             qtasCidades = 0;
+            nomeCidades = new string[asCidades.Length];
+
+            // preenchemos o vetor de cidades com seus nomes correspondentes
             foreach (Cidade cidade in asCidades)
                 if (cidade != null)
+                {
+                    nomeCidades[qtasCidades] = cidade.NomeCidade;
                     qtasCidades++;
+                }
 
 
             var arquivo = new StreamReader(nomeArquivo);
-            tipoGrafo = arquivo.ReadLine()[0]; // acessa primeiro caracter com tipo do grafo
             matriz = new int[qtasCidades, qtasCidades];
 
             string[,] matrizOrdenada = LerDados(nomeArquivo);
@@ -47,7 +52,6 @@ namespace apCidadesBacktracking
             }
         }
 
-        public char TipoGrafo { get => tipoGrafo; set => tipoGrafo = value; }
         public int QtasCidades { get => qtasCidades; set => qtasCidades = value; }
         public int[,] Matriz { get => matriz; set => matriz = value; }
 
@@ -60,15 +64,20 @@ namespace apCidadesBacktracking
 
             for (int coluna = 0; coluna < qtasCidades; coluna++)
             {
-                dgv.Columns[coluna].HeaderText = coluna.ToString();
+                dgv.Columns[coluna].HeaderText = nomeCidades[coluna];
                 dgv.Rows[coluna].HeaderCell.Value = coluna.ToString();
-                dgv.Columns[coluna].Width = 50;
+                dgv.Columns[coluna].Width = 80;
             }
 
             for (int linha = 0; linha < qtasCidades; linha++)
+            {
+                dgv.Rows[linha].HeaderCell.Value = nomeCidades[linha];
+                dgv.RowHeadersWidth = 120;
+
                 for (int coluna = 0; coluna < qtasCidades; coluna++)
                     if (matriz[linha, coluna] != 0)
                         dgv[coluna, linha].Value = matriz[linha, coluna];
+            }
         }
 
         public List<PilhaVetor<Movimento>> BuscarTodosOsCaminhos(int origem, int destino)
@@ -149,6 +158,10 @@ namespace apCidadesBacktracking
 
         public PilhaVetor<Movimento> ClonarPilha(PilhaVetor<Movimento> pilha)
         {
+            // se a pilha não existe
+            if (pilha.EstaVazia)
+                throw new Exception("Não é possível clonar uma pilha sem elementos");
+
             PilhaVetor<Movimento> novaPilha = new PilhaVetor<Movimento>(pilha.Tamanho);
             List<Movimento> elementos = pilha.Conteudo();
 
@@ -161,6 +174,10 @@ namespace apCidadesBacktracking
 
         public string[,] LerDados(string arquivoDeLeitura)
         {
+            if (arquivoDeLeitura == "")
+                throw new Exception("Não foi possível ler os dados do arquivo");
+
+            
             // pegamos todas as linhas do arquivo de leitura
             // fatiamos a cidade de origem do conteúdo da linha
             // preenchemos a matriz bidimensional para saber

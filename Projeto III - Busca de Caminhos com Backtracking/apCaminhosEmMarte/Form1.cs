@@ -80,6 +80,7 @@ namespace apCaminhosEmMarte
         Cidade[] asCidades;
         int quantasCidades;   // tamanho lógico
         GrafoBacktracking grafo;
+
         int menorDistancia = Int32.MaxValue;
         List<PilhaVetor<Movimento>> caminhos;
 
@@ -170,6 +171,9 @@ namespace apCaminhosEmMarte
                 grafo.CriarLigacao(indexLinha, indexColuna, distancia);
                 AtualizarTela(dgvCaminhos);
             }
+
+            else
+                MessageBox.Show("Preencha os dados");
         }
 
         private void btnExcluirCaminho_Click(object sender, EventArgs e)
@@ -184,6 +188,9 @@ namespace apCaminhosEmMarte
                 grafo.ExcluirLigacao(indexLinha, indexColuna);
                 AtualizarTela(dgvCaminhos);
             }
+
+            else
+                MessageBox.Show("Preencha os dados");
         }
 
         private void btnAlterarCaminho_Click(object sender, EventArgs e)
@@ -199,6 +206,25 @@ namespace apCaminhosEmMarte
                 grafo.AlterarLigacao(indexLinha, indexColuna, distancia);
                 AtualizarTela(dgvCaminhos);
             }
+
+            else
+                MessageBox.Show("Preencha os dados");
+        }
+
+        private void btnBuscarCaminho_Click(object sender, EventArgs e)
+        {
+            // pegamos as cidades de origem e destino e buscamos os caminhos
+            int cidadeOrigem  = cbxOrigem.SelectedIndex;
+            int cidadeDestino = cbxDestino.SelectedIndex;
+
+            // buscamos todos os caminhos possíveis entre as cidades selecionadas
+            // e depois verificamos qual é o menor caminho dentre os achados
+            caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
+            PilhaVetor<Movimento> menorRota = CalcularMenorRota(caminhos);
+
+            // exibimos a menorRota também em um DataGridView separado
+            AtualizarTela(dgvMelhorCaminho, menorRota);
+            AtualizarTela(dgvCaminhos, caminhos);
         }
 
         private void AtualizarTela(DataGridView dgv)
@@ -210,69 +236,92 @@ namespace apCaminhosEmMarte
         {
             string caminho = "";
 
-            // 1 -> 2
-            // 2 -> 6
             if (!rota.EstaVazia)
             {
-                List<Movimento> movim = rota.Conteudo();
-                caminho = movim[0].Origem.ToString();
-
-                foreach (Movimento movimento in movim)
-                    caminho += " -> " + movimento.Destino.ToString();
-
+                // configuramos o DataGridView para os novosDados
                 dgv.Rows.Clear();
                 dgv.Refresh();
                 dgv.RowCount = dgv.ColumnCount = 1;
 
                 dgv.Columns[0].HeaderText = "Menor Rota";
-                dgv[0, 0].Value = caminho;
                 dgv.Columns[0].Width = 300;
+
+                // a cadeia de strings receberá o nome da cidade de origem e em seguida
+                // receberá a cidade subsequente
+                List<Movimento> movim = rota.Conteudo();
+                caminho = asCidades[movim[0].Origem].NomeCidade.Trim();
+
+                foreach (Movimento movimento in movim)
+                    caminho += " -> " + asCidades[movimento.Destino].NomeCidade.Trim();
+
+                dgv[0, 0].Value = caminho;
             }
         }
 
-        private void btnBuscarCaminho_Click(object sender, EventArgs e)
+        private void AtualizarTela(DataGridView dgv, List<PilhaVetor<Movimento>> caminhos)
         {
-            // pegamos as cidades de origem e destino e buscamos os caminhos
-            int cidadeOrigem  = cbxOrigem.SelectedIndex;
-            int cidadeDestino = cbxDestino.SelectedIndex;
-
-            int origem, destino, distancia;
-            PilhaVetor<Movimento> menorRota = new PilhaVetor<Movimento>();
-            PilhaVetor<Movimento> cloneRota = new PilhaVetor<Movimento>();
-            PilhaVetor<Movimento> rotaAux = new PilhaVetor<Movimento>();
-
-            caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
-
-            // buscamos o menr caminho dentre todos os encontrados
-            foreach(PilhaVetor<Movimento> rota in caminhos)
+            // se tem um caminho para exibir
+            if (caminhos.Count > 0)
             {
-                distancia = 0;
-                cloneRota = grafo.ClonarPilha(rota);
-                while (!rota.EstaVazia)
-                {
-                    Movimento movim = rota.Desempilhar();
-                    origem = movim.Origem;
-                    destino = movim.Destino;
+                // configuramos novamente o DataGridView para os novos dados
+                dgv.Rows.Clear();
+                dgv.Refresh();
+                dgv.RowCount = caminhos.Count;
+                dgv.ColumnCount = 1;
 
-                    distancia += grafo.Matriz[origem, destino];
-                }
+                dgv.Columns[0].HeaderText = "Caminho";
+                dgv.Columns[0].Width = 300;
+                dgv.RowHeadersWidth = 50;
 
-                if (distancia < menorDistancia)
+                // inserimos todas as rotas no DataGridView de acordo com o index dela na lista
+                // então no índice 0 terá a rota de índex 0
+                for (int index = 0; index < caminhos.Count; index++)
                 {
-                    menorDistancia = distancia;
-                    rotaAux = cloneRota;
+                    dgv.Rows[index].HeaderCell.Value = index.ToString();
+
+                    List<Movimento> caminhoAtual = caminhos[index].Conteudo();
+                    string caminho = asCidades[caminhoAtual[0].Origem].NomeCidade.Trim();
+
+                    foreach (Movimento movim in caminhoAtual)
+                        caminho += " -> " + asCidades[movim.Destino].NomeCidade.Trim();
+
+                    // adicionamos o caminho ao DataGridView
+                    dgv[0, index].Value = caminho;
                 }
             }
 
-            menorRota = rotaAux;
+            else
+                MessageBox.Show("Não foi encontrado nenhum caminho entre as cidades correspondentes");
+        }
 
-            // preparamos a rota para inserí-la no listBox
-            /*
-            while(!rotaAux.EstaVazia)
-                menorRota.Empilhar(rotaAux.Desempilhar());
+        private PilhaVetor<Movimento> CalcularMenorRota(List<PilhaVetor<Movimento>> caminhos)
+        {
+            int origem, destino, distancia = 0;
+            PilhaVetor<Movimento> menorRota = new PilhaVetor<Movimento>();
+            PilhaVetor<Movimento> cloneRota = new PilhaVetor<Movimento>();
 
-            */
-            AtualizarTela(dgvMelhorCaminho, menorRota);
+            for (int index = 0; index < caminhos.Count; index++)
+            {
+                List<Movimento> caminhoAtual = caminhos[index].Conteudo();
+                cloneRota = grafo.ClonarPilha(caminhos[index]);
+
+                // verificamos a distância total do caminhoAtual
+                foreach (Movimento movim in caminhoAtual)
+                {
+                    origem = movim.Origem;
+                    destino = movim.Destino;
+                    distancia += grafo.Matriz[origem, destino];
+                }
+
+                // caso seja melhor, a menorRota recebe caminhoAtual
+                if (distancia < menorDistancia)
+                {
+                    menorDistancia = distancia;
+                    menorRota = cloneRota;
+                }
+            }
+
+            return menorRota;
         }
     }
 }
