@@ -87,7 +87,8 @@ namespace apCidadesBacktracking
             cidadeAtual = origem;
             saidaAtual = 0;
 
-            while (true)
+            // enquanto não lermos todas as possíveis rotas entre a linha e a coluna
+            while (saidaAtual <= qtasCidades)
             {
                 while (saidaAtual < qtasCidades)
                 {
@@ -128,14 +129,19 @@ namespace apCidadesBacktracking
                     }
                 }
 
+                // caso não haja mais possíveis caminhos a serem tentados, voltamos uma cidade
                 if (pilha.Tamanho > 0)
                 {
                     // volta uma cidadeAtual para verificar outros caminhos
-                    Movimento movimento = pilha.Desempilhar();                    
+                    Movimento movimento = pilha.Desempilhar();
                     cidadeAtual = movimento.Origem;
                     saidaAtual = movimento.Destino + 1;
                     passou[cidadeAtual] = false; // marca a cidade atual como não visitada
                 }
+
+                // se terminamos de ler todas as possibilidades possíveis, retornamos a lista de caminhos
+                else if (saidaAtual == qtasCidades)
+                    break;
             }
 
             return listaDeCaminhos;

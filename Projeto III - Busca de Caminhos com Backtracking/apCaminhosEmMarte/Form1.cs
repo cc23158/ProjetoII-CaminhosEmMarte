@@ -225,7 +225,7 @@ namespace apCaminhosEmMarte
                 dgv.RowCount = dgv.ColumnCount = 1;
 
                 dgv.Columns[0].HeaderText = "Menor Rota";
-                dgv.Rows[0].HeaderCell.Value = caminho;
+                dgv[0, 0].Value = caminho;
                 dgv.Columns[0].Width = 300;
             }
         }
