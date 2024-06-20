@@ -68,6 +68,8 @@
             this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
             this.dlgAbrirCidades = new System.Windows.Forms.OpenFileDialog();
             this.dlgAbrirCaminhos = new System.Windows.Forms.OpenFileDialog();
+            this.dlgFecharCaminho = new System.Windows.Forms.OpenFileDialog();
+            this.dlgFecharCidade = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tpCidades.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).BeginInit();
@@ -493,6 +495,14 @@
             // 
             this.dlgAbrirCaminhos.FileName = "openFileDialog1";
             // 
+            // dlgFecharCaminho
+            // 
+            this.dlgFecharCaminho.FileName = "openFileDialog1";
+            // 
+            // dlgFecharCidade
+            // 
+            this.dlgFecharCidade.FileName = "openFileDialog2";
+            // 
             // FrmCaminhos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -563,6 +573,8 @@
         private System.Windows.Forms.OpenFileDialog dlgAbrirCidades;
         private System.Windows.Forms.OpenFileDialog dlgAbrirCaminhos;
         private System.Windows.Forms.Button btnBuscarCaminho;
+        private System.Windows.Forms.OpenFileDialog dlgFecharCaminho;
+        private System.Windows.Forms.OpenFileDialog dlgFecharCidade;
     }
 }
 

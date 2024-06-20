@@ -65,6 +65,27 @@ namespace apCaminhosEmMarte
             // cada cidade individualmente e usar esse objeto Cidade
             // para gravar seus próprios dados no arquivo
             // fechar o arquivo ao final do percurso
+            if (dlgFecharCaminho.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter arquivo = new StreamWriter(dlgFecharCaminho.FileName);
+
+                // percorremos todas as informações do grafo e gravamos no arquivo .txt
+                int[,] matriz = grafo.Matriz;
+
+
+                for (int linha = 0; linha < quantasCidades; linha++)
+                    for (int coluna = 0; coluna < quantasCidades; coluna++)
+                        if (matriz[linha, coluna] != 0)
+                        {
+                            string origem = asCidades[linha].NomeCidade;
+                            string destino = asCidades[coluna].NomeCidade;
+                            string distancia = matriz[linha, coluna].ToString();
+
+                            arquivo.WriteLine($"{origem}{destino}{distancia}");
+                        }
+
+                arquivo.Close();
+            }
         }
 
         private void FrmCaminhos_Load(object sender, EventArgs e)
