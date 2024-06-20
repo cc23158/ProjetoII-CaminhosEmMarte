@@ -98,6 +98,8 @@ namespace apCaminhosEmMarte
 
         }
 
+        /////////////// Projeto Caminhos em Marte ///////////////
+        
         Cidade[] asCidades;
         int quantasCidades;   // tamanho lógico
         GrafoBacktracking grafo;
@@ -106,8 +108,8 @@ namespace apCaminhosEmMarte
         // criamos variável para saber todos os possíveis caminhos
         // criamos variável para armazenar o caminho a ser desenhado no mapa
         int menorDistancia = Int32.MaxValue;
-        List<PilhaVetor<Movimento>> caminhos;
-        List<(int origem, int destino)> linhaAerea;
+        List<PilhaVetor<Movimento>> caminhos = null;
+        List<(int origem, int destino)> linhaAerea = null;
 
         private void tpCaminhos_Enter(object sender, EventArgs e)
         {
@@ -144,48 +146,6 @@ namespace apCaminhosEmMarte
                 CopiarNomes(cbxDestino);
                 AtualizarTela(dgvCaminhos);
             }
-        }
-
-        private void tpCaminhos_Leave(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OrdenarCidades()
-        {
-            //asCidades[0] = new Cidade("Campinas", 0, 0);
-            //asCidades[1] = new Cidade("Americana", 0, 0); 
-            //asCidades[2] = new Cidade("Sumaré", 0, 0);
-            //asCidades[3] = new Cidade("Estiva Gerbi", 0, 0);
-            //asCidades[4] = new Cidade("Rafard", 0, 0); 
-            //asCidades[5] = new Cidade("Rifaina", 0, 0);
-            //asCidades[6] = new Cidade("Hortolândia", 0, 0);
-            //quantasCidades = 7;
-
-            // Ordenação por seleção direta ou
-            // Selection Sort
-            for (int lento = 0; lento < quantasCidades; lento++)
-            {
-                int indiceMenorCidade = lento;
-                for (int rapido = lento + 1; rapido < quantasCidades; rapido++)
-                    if (asCidades[rapido].NomeCidade.CompareTo(
-                          asCidades[indiceMenorCidade].NomeCidade) < 0)
-                        indiceMenorCidade = rapido;
-
-                if (indiceMenorCidade != lento)
-                {
-                    Cidade auxiliar = asCidades[indiceMenorCidade];
-                    asCidades[indiceMenorCidade] = asCidades[lento];
-                    asCidades[lento] = auxiliar;
-                }
-            }
-        }
-
-        private void CopiarNomes(ComboBox comboBox)
-        {
-            foreach (Cidade cidade in asCidades)
-                if (cidade != null)
-                    comboBox.Items.Add(cidade.NomeCidade);
         }
 
         private void btnIncluirCaminho_Click(object sender, EventArgs e)
@@ -243,13 +203,10 @@ namespace apCaminhosEmMarte
 
         private void btnBuscarCaminho_Click(object sender, EventArgs e)
         {
-            // pegamos as cidades de origem e destino e buscamos os caminhos
-            int cidadeOrigem  = cbxOrigem.SelectedIndex;
-            int cidadeDestino = cbxDestino.SelectedIndex;
-
+            // pegamos as cidades de origem e destino e buscamos os caminhos e
             // buscamos todos os caminhos possíveis entre as cidades selecionadas
             // e depois verificamos qual é o menor caminho dentre os achados
-            caminhos = grafo.BuscarTodosOsCaminhos(cidadeOrigem, cidadeDestino);
+            caminhos = grafo.BuscarTodosOsCaminhos(cbxOrigem.SelectedIndex, cbxDestino.SelectedIndex);
             PilhaVetor<Movimento> menorRota = CalcularMenorRota(caminhos);
 
             // exibimos a menorRota também em um DataGridView separado
@@ -271,17 +228,11 @@ namespace apCaminhosEmMarte
                 // chamamos a função de desenhar a linha no mapa
 
                 linhaAerea = new List<(int origem, int destino)>();
-
                 int indexRota = e.RowIndex;
                 List<Movimento> caminhoSelecionado = caminhos[indexRota].Conteudo();
 
                 foreach (Movimento movim in caminhoSelecionado)
-                {
-                    int cidadeOrigem = movim.Origem;
-                    int cidadeDestino = movim.Destino;
-
-                    linhaAerea.Add((cidadeOrigem, cidadeDestino));
-                }
+                    linhaAerea.Add((movim.Origem, movim.Destino));
 
                 pbMapa2.Invalidate();
             }
@@ -291,70 +242,20 @@ namespace apCaminhosEmMarte
             else
             {
                 // configura os comboBoxes de acordo com a célula clicada
-                int indexLinha = e.RowIndex;
-                int indexColuna = e.ColumnIndex;
-
-                cbxOrigem.SelectedIndex = indexLinha;
-                cbxDestino.SelectedIndex = indexColuna;
+                cbxOrigem.SelectedIndex = e.RowIndex;
+                cbxDestino.SelectedIndex = e.ColumnIndex;
             }
         }
 
-        private void DesenharMelhorCaminho()
-        {
-            // se estamos com o DataGridView configurado para
-            // a exibição dos caminhos encontrados
-            if (dgvCaminhos.Columns.Count == 1)
-            {
-                // limpamos os dados da linha aérea
-                // selecionamos o índice da rota clicada
-                // identificamos a rota na lista de caminhos
-                // preenchemos a linha aérea com as cidades
-                // chamamos a função de desenhar a linha no mapa
-
-                linhaAerea = new List<(int origem, int destino)>();
-                List<Movimento> caminhoSelecionado = caminhos[0].Conteudo();
-
-                foreach (Movimento movim in caminhoSelecionado)
-                {
-                    int cidadeOrigem = movim.Origem;
-                    int cidadeDestino = movim.Destino;
-
-                    linhaAerea.Add((cidadeOrigem, cidadeDestino));
-                }
-
-                pbMapa2.Invalidate();
-            }
-        }
-
-        private void pbMapa2_Paint(object sender, PaintEventArgs e)
-        {
-            // se o mapa ainda não foi criado, não podemos desenhar nada
-            if (linhaAerea != null)
-            {
-                SolidBrush brush = new SolidBrush(Color.Black);
-                Pen pen = new Pen(brush, 2);
-
-                // desenhamos a linha aérea
-                foreach (var linha in linhaAerea)
-                {
-                    int origem = linha.origem;
-                    int destino = linha.destino;
-
-                    float XOrigem = (float)Math.Round(asCidades[origem].X * pbMapa2.Width);
-                    float YOrigem = (float)Math.Round(asCidades[origem].Y * pbMapa2.Height);
-                    float XDestino = (float)Math.Round(asCidades[destino].X * pbMapa2.Width);
-                    float YDestino = (float)Math.Round(asCidades[destino].Y * pbMapa2.Height);
-
-                    e.Graphics.DrawLine(pen, XOrigem, YOrigem, XDestino, YDestino);
-                }
-            }
-        }
-
+        // essa sobrecarga atualiza o DataGridView de caminhos
+        // com os dados do grafo
         private void AtualizarTela(DataGridView dgv)
         {
             grafo.Exibir(dgvCaminhos);
         }
 
+        // essa sobrecarga atualiza o DataGridView de caminhos
+        // com as rotas encontradas entre duas cidades
         private void AtualizarTela(DataGridView dgv, PilhaVetor<Movimento> rota)
         {
             string caminho = "";
@@ -382,6 +283,7 @@ namespace apCaminhosEmMarte
             }
         }
 
+        // essa sobrecarga atualiza o DataGridView da melhor rota
         private void AtualizarTela(DataGridView dgv, List<PilhaVetor<Movimento>> caminhos)
         {
             // se tem um caminho para exibir
@@ -418,34 +320,120 @@ namespace apCaminhosEmMarte
                 MessageBox.Show("Não foi encontrado nenhum caminho entre as cidades correspondentes");
         }
 
+        private void pbMapa2_Paint(object sender, PaintEventArgs e)
+        {
+            // se o mapa ainda não foi criado e portanto linhaAerea
+            // é nula, então não podemos desenhar nada
+            if (linhaAerea == null)
+                return;
+
+            // objetos de desenho
+            SolidBrush brush = new SolidBrush(Color.Black);
+            Pen pen = new Pen(brush, 2);
+
+            // desenhamos a linha aérea
+            foreach (var linha in linhaAerea)
+            {
+                int origem = linha.origem;
+                int destino = linha.destino;
+
+                float XOrigem = (float)Math.Round(asCidades[origem].X * pbMapa2.Width);
+                float YOrigem = (float)Math.Round(asCidades[origem].Y * pbMapa2.Height);
+                float XDestino = (float)Math.Round(asCidades[destino].X * pbMapa2.Width);
+                float YDestino = (float)Math.Round(asCidades[destino].Y * pbMapa2.Height);
+
+                e.Graphics.DrawLine(pen, XOrigem, YOrigem, XDestino, YDestino);
+            }
+        }
+
+        private void OrdenarCidades()
+        {
+            //asCidades[0] = new Cidade("Campinas", 0, 0);
+            //asCidades[1] = new Cidade("Americana", 0, 0); 
+            //asCidades[2] = new Cidade("Sumaré", 0, 0);
+            //asCidades[3] = new Cidade("Estiva Gerbi", 0, 0);
+            //asCidades[4] = new Cidade("Rafard", 0, 0); 
+            //asCidades[5] = new Cidade("Rifaina", 0, 0);
+            //asCidades[6] = new Cidade("Hortolândia", 0, 0);
+            //quantasCidades = 7;
+
+            // Ordenação por seleção direta ou
+            // Selection Sort
+
+            for (int lento = 0; lento < quantasCidades; lento++)
+            {
+                int indiceMenorCidade = lento;
+                for (int rapido = lento + 1; rapido < quantasCidades; rapido++)
+                    if (asCidades[rapido].NomeCidade.CompareTo(
+                          asCidades[indiceMenorCidade].NomeCidade) < 0)
+                        indiceMenorCidade = rapido;
+
+                if (indiceMenorCidade != lento)
+                {
+                    Cidade auxiliar = asCidades[indiceMenorCidade];
+                    asCidades[indiceMenorCidade] = asCidades[lento];
+                    asCidades[lento] = auxiliar;
+                }
+            }
+        }
+
+        private void CopiarNomes(ComboBox comboBox)
+        {
+            // adicionamos as cidades nos ComboBoxes
+            foreach (Cidade cidade in asCidades)
+                if (cidade != null)
+                    comboBox.Items.Add(cidade.NomeCidade);
+        }
+
         private PilhaVetor<Movimento> CalcularMenorRota(List<PilhaVetor<Movimento>> caminhos)
         {
-            int origem, destino, distancia = 0;
-            PilhaVetor<Movimento> menorRota = new PilhaVetor<Movimento>();
-            PilhaVetor<Movimento> cloneRota = new PilhaVetor<Movimento>();
+            PilhaVetor<Movimento> menorRota = null;
 
-            for (int index = 0; index < caminhos.Count; index++)
+            foreach (var caminho in caminhos)
             {
-                List<Movimento> caminhoAtual = caminhos[index].Conteudo();
-                cloneRota = grafo.ClonarPilha(caminhos[index]);
+                int distancia = 0;
+                var caminhoAtual = caminho.Conteudo();
 
-                // verificamos a distância total do caminhoAtual
+                // calcula a disância total da rota em análise
                 foreach (Movimento movim in caminhoAtual)
                 {
-                    origem = movim.Origem;
-                    destino = movim.Destino;
+                    int origem = movim.Origem;
+                    int destino = movim.Destino;
                     distancia += grafo.Matriz[origem, destino];
                 }
 
-                // caso seja melhor, a menorRota recebe caminhoAtual
+                // verificamos se essa é a menor distância encontrada até agora
                 if (distancia < menorDistancia)
                 {
                     menorDistancia = distancia;
-                    menorRota = cloneRota;
+                    menorRota = grafo.ClonarPilha(caminho);
                 }
             }
 
             return menorRota;
+        }
+
+        private void DesenharMelhorCaminho()
+        {
+            // se não estamos com o DataGridView configurado para
+            // a exibição dos caminhos encontrados, ignoramos
+            if (dgvCaminhos.Columns.Count != 1)
+                return;
+
+
+            // limpamos os dados da linha aérea
+            // selecionamos o índice da rota clicada
+            // identificamos a rota na lista de caminhos
+            // preenchemos a linha aérea com as cidades
+            // chamamos a função de desenhar a linha no mapa
+
+            linhaAerea = new List<(int origem, int destino)>();
+            List<Movimento> caminhoSelecionado = caminhos[0].Conteudo();
+
+            foreach (Movimento movim in caminhoSelecionado)
+                linhaAerea.Add((movim.Origem, movim.Destino));
+
+            pbMapa2.Invalidate();
         }
     }
 }

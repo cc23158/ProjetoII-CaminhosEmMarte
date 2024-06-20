@@ -318,7 +318,6 @@
             this.tpCaminhos.Text = "Caminhos";
             this.tpCaminhos.UseVisualStyleBackColor = true;
             this.tpCaminhos.Enter += new System.EventHandler(this.tpCaminhos_Enter);
-            this.tpCaminhos.Leave += new System.EventHandler(this.tpCaminhos_Leave);
             // 
             // dgvMelhorCaminho
             // 

@@ -32,8 +32,6 @@ namespace apCidadesBacktracking
                     qtasCidades++;
                 }
 
-
-            var arquivo = new StreamReader(nomeArquivo);
             matriz = new int[qtasCidades, qtasCidades];
 
             string[,] matrizOrdenada = LerDados(nomeArquivo);
@@ -83,6 +81,207 @@ namespace apCidadesBacktracking
         public List<PilhaVetor<Movimento>> BuscarTodosOsCaminhos(int origem, int destino)
         {
             // variáveis que armazenarão os caminhos
+            List<PilhaVetor<Movimento>> listaDeCaminhos = new List<PilhaVetor<Movimento>>();
+            PilhaVetor<Movimento> pilha = new PilhaVetor<Movimento>();
+
+            // variáveis para a navegação pela matriz
+            bool[] passou = new bool[qtasCidades];
+            int cidadeAtual, saidaAtual;
+
+            cidadeAtual = origem;
+            saidaAtual = 0;
+
+            // enquanto não lermos todas as possíveis rotas entre a linha e a coluna
+            while (saidaAtual <= qtasCidades)
+            {
+                while (saidaAtual < qtasCidades)
+                {
+                    // se chegamos ao destino
+                    if (saidaAtual == destino && matriz[cidadeAtual, saidaAtual] != 0)
+                    {
+                        // criamos o movimento
+                        // empilhamos o movimento
+                        // inserimos o caminho na lista
+                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
+                        pilha.Empilhar(movim);
+
+                        // adiciona uma cópia da pilha atual à lista de caminhos para que sejam retornadas as rotas corretamente
+                        listaDeCaminhos.Add(ClonarPilha(pilha));
+                        break;
+                    }
+
+                    // se não tem nada ou já passou na cidade
+                    else if (matriz[cidadeAtual, saidaAtual] == 0 || passou[saidaAtual])
+                        saidaAtual++;
+
+                    else
+                    {
+                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
+                        pilha.Empilhar(movim);
+                        passou[cidadeAtual] = true;
+                        cidadeAtual = saidaAtual; // muda para a nova cidade
+                        saidaAtual = 0; // reinicia busca de saídas da nova
+                                        // cidade a partir da primeira cidade
+                    }
+                }
+
+                // caso não haja mais possíveis caminhos a serem tentados, voltamos uma cidade
+                if (pilha.Tamanho > 0)
+                {
+                    // volta uma cidadeAtual para verificar outros caminhos
+                    Movimento movimento = pilha.Desempilhar();
+                    cidadeAtual = movimento.Origem;
+                    saidaAtual = movimento.Destino + 1;
+                    passou[cidadeAtual] = false; // marca a cidade atual como não visitada
+                }
+
+                // se terminamos de ler todas as possibilidades possíveis, retornamos a lista de caminhos
+                else if (saidaAtual == qtasCidades)
+                    break;
+            }
+
+            return listaDeCaminhos;
+        }
+
+        public PilhaVetor<Movimento> ClonarPilha(PilhaVetor<Movimento> pilha)
+        {
+            // se a pilha não existe, não podemos cloná-la
+            if (pilha.EstaVazia)
+                throw new Exception("Não é possível clonar uma pilha sem elementos");
+
+            PilhaVetor<Movimento> novaPilha = new PilhaVetor<Movimento>(pilha.Tamanho);
+            List<Movimento> elementos = pilha.Conteudo();
+
+            // cria uma nova pilha e empilha os elementos na mesma ordem
+            foreach (Movimento mov in elementos)
+                novaPilha.Empilhar(mov);
+
+            return novaPilha;
+        }
+
+        public string[,] LerDados(string arquivoDeLeitura)
+        {
+            if (arquivoDeLeitura == "")
+                throw new Exception("Não foi possível ler os dados do arquivo");
+
+            
+            // pegamos todas as linhas do arquivo de leitura
+            // fatiamos a cidade de origem do conteúdo da linha
+            // preenchemos a matriz bidimensional para saber
+            // como os conteúdos das linhas devem ser retornados
+            string[] matrizDados  =  File.ReadAllLines(arquivoDeLeitura);
+            string[,] matrizOrigemConteudo = new string[matrizDados.Length, 3];
+
+            for (int linha = 0; linha < matrizDados.Length; linha++)
+            {
+                // guardamos a origem na primeira posição da matriz
+                // guardamos o destino da na segunda posição da matriz
+                // guardamos o conteúdo da linha na terceira posição da matriz
+                matrizOrigemConteudo[linha, 0] = matrizDados[linha].Substring(0, 15);
+                matrizOrigemConteudo[linha, 1] = matrizDados[linha].Substring(15, 15);
+                matrizOrigemConteudo[linha, 2] = matrizDados[linha].Substring(matrizDados[linha].Length - tamanhoDistancia, tamanhoDistancia);
+            }
+
+            OrdenarDados(matrizOrigemConteudo);
+
+            return matrizOrigemConteudo;
+        }
+
+        public void OrdenarDados(string[,] matrizDados)
+        {
+            // ordenação alfabética de acordo com o nome
+            // da cidade de origem do caminho
+            // (busca binária)
+            for (int index = 1; index < matrizDados.Length / 3; index++)
+            {
+                string cidadeDeOrigem = matrizDados[index, 0];
+                string cidadeDeDestino = matrizDados[index, 1];
+                string conteudo = matrizDados[index, 2];
+
+                int esquerda = 0;
+                int direita = index;
+
+                while (esquerda < direita)
+                {
+                    int mid = (esquerda + direita) / 2;
+                    if (string.Compare(cidadeDeOrigem, matrizDados[mid, 0]) >= 0)
+                        esquerda = mid + 1;
+                    
+                    else
+                        direita = mid;
+                }
+
+                for (int j = index; j > esquerda; j--)
+                {
+                    matrizDados[j, 0] = matrizDados[j - 1, 0];
+                    matrizDados[j, 1] = matrizDados[j - 1, 1];
+                    matrizDados[j, 2] = matrizDados[j - 1, 2];
+                }
+
+                matrizDados[esquerda, 0] = cidadeDeOrigem;
+                matrizDados[esquerda, 1] = cidadeDeDestino;
+                matrizDados[esquerda, 2] = conteudo;
+            }
+        }
+
+        public int ProcurarIndex(Cidade[] asCidades, string cidadeProcurada)
+        {
+            if (cidadeProcurada == "")
+                throw new Exception("Não é possível procurar uma cidade nula");
+
+            // procura o índice da cidadeProcurada no array de cidades
+            for (int index = 0; index < asCidades.Length; index++)
+                if (asCidades[index] != null && asCidades[index].NomeCidade == cidadeProcurada)
+                    return index;
+
+            return -1;
+        }
+
+        public void CriarLigacao(int linha, int coluna, decimal distancia)
+        {
+            // não se pode criar ligações cuja cidade de origem é a cidade de destino
+            if (linha == coluna)
+                throw new Exception("Não foi possível criar o registro");
+
+            // se tiver um registro nessa posição da matriz
+            // não será criado a ligação
+            if (matriz[linha, coluna] != 0)
+                throw new Exception("Não foi possível criar o registro");
+
+            matriz[linha, coluna] = Convert.ToInt32(distancia);
+        }
+
+        public void ExcluirLigacao(int linha, int coluna)
+        {            
+            // não se pode excluir ligações cuja cidade de origem é a cidade de destino
+            if (linha == coluna)
+                throw new Exception("Não foi possível excluir o registro");
+
+            // se não tiver um registro nessa posição da matriz
+            // não será alterado nenhum dado
+            if (matriz[linha, coluna] == 0)
+                throw new Exception("Não é possível excluir registros inexistentes");
+
+            matriz[linha, coluna] = 0;
+        }
+
+        public void AlterarLigacao(int linha, int coluna, decimal distancia)
+        {
+            // não se pode atualizar ligações cuja cidade de origem é a cidade de destino
+            if (linha == coluna)
+                throw new Exception("Não foi possível atualizar o registro");
+
+            // se não tiver um registro nessa posição da matriz
+            // não será alterado nenhum dado
+            if (matriz[linha, coluna] == 0)
+                throw new Exception("Não é possível alterar registros inexistentes");
+
+            matriz[linha, coluna] = Convert.ToInt32(distancia);
+        }
+    }
+}
+/*
+// variáveis que armazenarão os caminhos
             List<PilhaVetor<Movimento>> listaDeCaminhos = new List<PilhaVetor<Movimento>>();
             PilhaVetor<Movimento> pilha = new PilhaVetor<Movimento>();
 
@@ -153,144 +352,5 @@ namespace apCidadesBacktracking
                     break;
             }
 
-            return listaDeCaminhos;
-        }
-
-        public PilhaVetor<Movimento> ClonarPilha(PilhaVetor<Movimento> pilha)
-        {
-            // se a pilha não existe
-            if (pilha.EstaVazia)
-                throw new Exception("Não é possível clonar uma pilha sem elementos");
-
-            PilhaVetor<Movimento> novaPilha = new PilhaVetor<Movimento>(pilha.Tamanho);
-            List<Movimento> elementos = pilha.Conteudo();
-
-            // cria uma nova pilha e empilha os elementos na mesma ordem
-            foreach (Movimento mov in elementos)
-                novaPilha.Empilhar(mov);
-
-            return novaPilha;
-        }
-
-        public string[,] LerDados(string arquivoDeLeitura)
-        {
-            if (arquivoDeLeitura == "")
-                throw new Exception("Não foi possível ler os dados do arquivo");
-
-            
-            // pegamos todas as linhas do arquivo de leitura
-            // fatiamos a cidade de origem do conteúdo da linha
-            // preenchemos a matriz bidimensional para saber
-            // como os conteúdos das linhas devem ser retornados
-            string[] matrizDados  =  File.ReadAllLines(arquivoDeLeitura);
-            string[,] matrizOrigemConteudo = new string[matrizDados.Length, 3];
-
-            for (int linha = 0; linha < matrizDados.Length; linha++)
-            {
-                string cidadeDeOrigem = matrizDados[linha].Substring(0, 15);
-                string cidadeDeDestino  = matrizDados[linha].Substring(15, 15);
-                string distancia = matrizDados[linha].Substring(matrizDados[linha].Length - tamanhoDistancia, tamanhoDistancia);
-
-                // guardamos a origem na primeira posição da matriz bidimensional
-                // e o conteúdo da linha na segunda posição
-                matrizOrigemConteudo[linha, 0] = cidadeDeOrigem;
-                matrizOrigemConteudo[linha, 1] = cidadeDeDestino;
-                matrizOrigemConteudo[linha, 2] = distancia;
-            }
-
-            OrdenarDados(matrizOrigemConteudo);
-
-            return matrizOrigemConteudo;
-        }
-
-        public void OrdenarDados(string[,] matrizDados)
-        {
-            // ordenação alfabética de acordo com o nome
-            // da cidade de origem do caminho
-            for (int index = 1; index < matrizDados.Length / 3; index++)
-            {
-                string cidadeDeOrigem = matrizDados[index, 0];
-                string cidadeDeDestino = matrizDados[index, 1];
-                string conteudo = matrizDados[index, 2];
-
-                int esquerda = 0;
-                int direita = index;
-
-                // Busca binária para encontrar a posição correta do elemento
-                while (esquerda < direita)
-                {
-                    int mid = (esquerda + direita) / 2;
-                    if (string.Compare(cidadeDeOrigem, matrizDados[mid, 0]) >= 0)
-                        esquerda = mid + 1;
-                    
-                    else
-                        direita = mid;
-                }
-
-                // Move todos os elementos para abrir espaço para o elemento chave
-                for (int j = index; j > esquerda; j--)
-                {
-                    matrizDados[j, 0] = matrizDados[j - 1, 0];
-                    matrizDados[j, 1] = matrizDados[j - 1, 1];
-                    matrizDados[j, 2] = matrizDados[j - 1, 2];
-                }
-
-                // Insere o elemento chave na posição encontrada
-                matrizDados[esquerda, 0] = cidadeDeOrigem;
-                matrizDados[esquerda, 1] = cidadeDeDestino;
-                matrizDados[esquerda, 2] = conteudo;
-            }
-        }
-
-        public int ProcurarIndex(Cidade[] asCidades, string cidadeProcurada)
-        {
-            for (int index = 0; index < asCidades.Length; index++)
-                if (asCidades[index] != null && asCidades[index].NomeCidade == cidadeProcurada)
-                    return index;
-
-            return -1;
-        }
-
-        public void CriarLigacao(int linha, int coluna, decimal distancia)
-        {
-            // não se pode criar ligações cuja cidade de origem é a cidade de destino
-            if (linha == coluna)
-                throw new Exception("Não foi possível criar o registro");
-
-            // se tiver um registro nessa posição da matriz
-            // não será criado a ligação
-            if (matriz[linha, coluna] != 0)
-                throw new Exception("Não foi possível criar o registro");
-
-            matriz[linha, coluna] = Convert.ToInt32(distancia);
-        }
-
-        public void ExcluirLigacao(int linha, int coluna)
-        {            
-            // não se pode excluir ligações cuja cidade de origem é a cidade de destino
-            if (linha == coluna)
-                throw new Exception("Não foi possível excluir o registro");
-
-            // se não tiver um registro nessa posição da matriz
-            // não será alterado nenhum dado
-            if (matriz[linha, coluna] == 0)
-                throw new Exception("Não é possível excluir registros inexistentes");
-
-            matriz[linha, coluna] = 0;
-        }
-
-        public void AlterarLigacao(int linha, int coluna, decimal distancia)
-        {
-            // não se pode atualizar ligações cuja cidade de origem é a cidade de destino
-            if (linha == coluna)
-                throw new Exception("Não foi possível atualizar o registro");
-
-            // se não tiver um registro nessa posição da matriz
-            // não será alterado nenhum dado
-            if (matriz[linha, coluna] == 0)
-                throw new Exception("Não é possível alterar registros inexistentes");
-
-            matriz[linha, coluna] = Convert.ToInt32(distancia);
-        }
-    }
-}
+            return listaDeCaminhos; 
+*/
