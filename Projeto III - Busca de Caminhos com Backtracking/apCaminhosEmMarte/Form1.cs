@@ -81,8 +81,12 @@ namespace apCaminhosEmMarte
         int quantasCidades;   // tamanho lógico
         GrafoBacktracking grafo;
 
+        // criamos variável para saber a menor distância e consequentemente, menor caminho
+        // criamos variável para saber todos os possíveis caminhos
+        // criamos variável para armazenar o caminho a ser desenhado no mapa
         int menorDistancia = Int32.MaxValue;
         List<PilhaVetor<Movimento>> caminhos;
+        List<(int origem, int destino)> linhaAerea;
 
         private void tpCaminhos_Enter(object sender, EventArgs e)
         {
@@ -119,6 +123,11 @@ namespace apCaminhosEmMarte
                 CopiarNomes(cbxDestino);
                 AtualizarTela(dgvCaminhos);
             }
+        }
+
+        private void tpCaminhos_Leave(object sender, EventArgs e)
+        {
+
         }
 
         private void OrdenarCidades()
@@ -225,6 +234,99 @@ namespace apCaminhosEmMarte
             // exibimos a menorRota também em um DataGridView separado
             AtualizarTela(dgvMelhorCaminho, menorRota);
             AtualizarTela(dgvCaminhos, caminhos);
+            DesenharMelhorCaminho();
+        }
+
+        private void dgvCaminhos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // se estamos com o DataGridView configurado para
+            // a exibição dos caminhos encontrados
+            if (dgvCaminhos.Columns.Count == 1)
+            {
+                // limpamos os dados da linha aérea
+                // selecionamos o índice da rota clicada
+                // identificamos a rota na lista de caminhos
+                // preenchemos a linha aérea com as cidades
+                // chamamos a função de desenhar a linha no mapa
+
+                linhaAerea = new List<(int origem, int destino)>();
+
+                int indexRota = e.RowIndex;
+                List<Movimento> caminhoSelecionado = caminhos[indexRota].Conteudo();
+
+                foreach (Movimento movim in caminhoSelecionado)
+                {
+                    int cidadeOrigem = movim.Origem;
+                    int cidadeDestino = movim.Destino;
+
+                    linhaAerea.Add((cidadeOrigem, cidadeDestino));
+                }
+
+                pbMapa2.Invalidate();
+            }
+
+            // se estamos com o DataGridView configurado para
+            // a exibição dos dados do arquivo .txt
+            else
+            {
+                // configura os comboBoxes de acordo com a célula clicada
+                int indexLinha = e.RowIndex;
+                int indexColuna = e.ColumnIndex;
+
+                cbxOrigem.SelectedIndex = indexLinha;
+                cbxDestino.SelectedIndex = indexColuna;
+            }
+        }
+
+        private void DesenharMelhorCaminho()
+        {
+            // se estamos com o DataGridView configurado para
+            // a exibição dos caminhos encontrados
+            if (dgvCaminhos.Columns.Count == 1)
+            {
+                // limpamos os dados da linha aérea
+                // selecionamos o índice da rota clicada
+                // identificamos a rota na lista de caminhos
+                // preenchemos a linha aérea com as cidades
+                // chamamos a função de desenhar a linha no mapa
+
+                linhaAerea = new List<(int origem, int destino)>();
+                List<Movimento> caminhoSelecionado = caminhos[0].Conteudo();
+
+                foreach (Movimento movim in caminhoSelecionado)
+                {
+                    int cidadeOrigem = movim.Origem;
+                    int cidadeDestino = movim.Destino;
+
+                    linhaAerea.Add((cidadeOrigem, cidadeDestino));
+                }
+
+                pbMapa2.Invalidate();
+            }
+        }
+
+        private void pbMapa2_Paint(object sender, PaintEventArgs e)
+        {
+            // se o mapa ainda não foi criado, não podemos desenhar nada
+            if (linhaAerea != null)
+            {
+                SolidBrush brush = new SolidBrush(Color.Black);
+                Pen pen = new Pen(brush, 2);
+
+                // desenhamos a linha aérea
+                foreach (var linha in linhaAerea)
+                {
+                    int origem = linha.origem;
+                    int destino = linha.destino;
+
+                    float XOrigem = (float)Math.Round(asCidades[origem].X * pbMapa2.Width);
+                    float YOrigem = (float)Math.Round(asCidades[origem].Y * pbMapa2.Height);
+                    float XDestino = (float)Math.Round(asCidades[destino].X * pbMapa2.Width);
+                    float YDestino = (float)Math.Round(asCidades[destino].Y * pbMapa2.Height);
+
+                    e.Graphics.DrawLine(pen, XOrigem, YOrigem, XDestino, YDestino);
+                }
+            }
         }
 
         private void AtualizarTela(DataGridView dgv)
@@ -236,6 +338,7 @@ namespace apCaminhosEmMarte
         {
             string caminho = "";
 
+            // se há alguma rota, então a exibimos no DataGridView
             if (!rota.EstaVazia)
             {
                 // configuramos o DataGridView para os novosDados
