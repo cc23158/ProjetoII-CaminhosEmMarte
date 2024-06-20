@@ -1,4 +1,9 @@
-﻿using apCidadesBacktracking;
+﻿/*
+Keven Richard da Rocha Barreiros - 23143
+Victor Yuji Mimura               - 23158
+*/
+
+using apCidadesBacktracking;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,12 +24,7 @@ namespace apCaminhosEmMarte
             InitializeComponent();
         }
 
-        ITabelaDeHash<Cidade> tabela;
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
+        ITabelaDeHash<Cidade> tabela;   
 
         private void btnLerArquivo_Click(object sender, EventArgs e)
         {
@@ -53,6 +53,7 @@ namespace apCaminhosEmMarte
                 var asCidades = tabela.Conteudo();
                 foreach (Cidade cid in asCidades)
                     lsbCidades.Items.Add(cid);
+                pbMapa.Invalidate();
                 arquivo.Close();
             }
         }
@@ -65,37 +66,156 @@ namespace apCaminhosEmMarte
             // cada cidade individualmente e usar esse objeto Cidade
             // para gravar seus próprios dados no arquivo
             // fechar o arquivo ao final do percurso
-            if (dlgFecharCaminho.ShowDialog() == DialogResult.OK)
+            if (dlgFecharCidade.ShowDialog() == DialogResult.OK) // abre a caixa de diálogos
             {
-                StreamWriter arquivo = new StreamWriter(dlgFecharCaminho.FileName);
+                // o arquivo escolhido pelo usuário terá os dados de tabelaDeHash gravados
+                var arquivo = new StreamWriter(dlgFecharCidade.FileName);
 
-                // percorremos todas as informações do grafo e gravamos no arquivo .txt
-                int[,] matriz = grafo.Matriz;
-
-
-                for (int linha = 0; linha < quantasCidades; linha++)
-                    for (int coluna = 0; coluna < quantasCidades; coluna++)
-                        if (matriz[linha, coluna] != 0)
-                        {
-                            string origem = asCidades[linha].NomeCidade;
-                            string destino = asCidades[coluna].NomeCidade;
-                            string distancia = matriz[linha, coluna].ToString();
-
-                            arquivo.WriteLine($"{origem}{destino}{distancia}");
-                        }
+                // a tabela deve ser percorrida e os dados atualizados
+                foreach (Cidade cidade in tabela.Conteudo())
+                    cidade.GravarDados(arquivo);
 
                 arquivo.Close();
             }
+
+            // abrimos o arquivo para saída, se houver um arquivo selecionado
+            // chamamos a função para gravar os dados da matriz no arquivo
+            if (dlgFecharCaminho.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter arquivo = new StreamWriter(dlgFecharCaminho.FileName);
+                grafo.GravarDados(arquivo);
+            }
         }
 
-        private void FrmCaminhos_Load(object sender, EventArgs e)
+        private void btnInserir_Click(object sender, EventArgs e)
         {
+            if (txtCidade.Text != "")
+            {
+                string nomeCidade = txtCidade.Text.Trim().PadRight(15); // nome da cidade digitado (formatado)
+                double x = (double)udX.Value;                        // coordenada X digitada
+                double y = (double)udY.Value;                        // coordenada Y digitada
 
+                // formatamos as coordenadas para 7.5f
+                string strX = x.ToString("0.00000");
+                string strY = y.ToString("0.00000");
+
+                Cidade cidade = new Cidade(nomeCidade, double.Parse(strX), double.Parse(strY));     // cria objeto Cidade com os dados digitados
+
+                tabela.Inserir(cidade); // insere o objeto Cidade na tabelaDeHash
+                ListarNoListBox();
+            }
+
+            else
+                MessageBox.Show("Preencha os campos");
         }
 
-        private void tabControl1_Enter(object sender, EventArgs e)
+        private void btnRemover_Click(object sender, EventArgs e)
         {
+            if (txtCidade.Text != "")
+            {
+                string nomeCidade = txtCidade.Text.Trim().PadRight(15); // nome da cidade digitado (formatado)
+                Cidade cidade = new Cidade(nomeCidade, 0, 0);
 
+                tabela.Remover(cidade);
+                ListarNoListBox();
+            }
+
+            else
+                MessageBox.Show("Preencha o campos de nome da cidade");
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            if (txtCidade.Text != "")
+            {
+                string nomeCidade = txtCidade.Text.Trim().PadRight(15);
+                Cidade cidade = new Cidade(nomeCidade, 0, 0);
+                int index = -1;
+
+                // se a cidade procurada existe na tabelaDeHash
+                // exibimos as informações dela na tela
+                if (tabela.Existe(cidade, out index))
+                {
+                    List<Cidade> conteudo = tabela.Conteudo();
+
+                    foreach (Cidade cid in conteudo)
+                        if(cid.CompareTo(cidade) == 0)
+                        {
+                            udX.Value = (decimal)cid.X;
+                            udY.Value = (decimal)cid.Y;
+                            break;
+                        }
+                }
+            }
+
+            else
+                MessageBox.Show("Preencha o campo de nome da cidade");
+        }
+
+        private void btnListar_Click(object sender, EventArgs e)
+        {
+            // se a tabelaDeHash existe, exibimos as informações
+            if (tabela != null)
+            {
+                lsbCidades.Items.Clear();
+
+                foreach (Cidade cid in tabela.Conteudo()) // para cada objeto Cidade na tabelaDeHash
+                {
+                    string nomeCidade = cid.Chave;        // define o nome da cidade
+                    string x = cid.X.ToString("0.00000"); // coordenada X
+                    string y = cid.Y.ToString("0.00000"); // coordenada Y
+
+                    lsbCidades.Items.Add($"{nomeCidade} - ({x} , {y})");
+                }
+            }
+
+            else
+                MessageBox.Show("Não foi possível carregar os dados do ListBox");
+        }
+
+        private void pbMapa_Paint(object sender, PaintEventArgs e)
+        {
+            if (tabela != null)
+            {
+                // variável que recebe uma lista dos objetos inseridos na tabelaDeHash
+                var conteudo = tabela.Conteudo();
+
+                // variável do tamanho da fonte da cidade
+                const float tamanhoDaFonte = 8.25f;
+
+                if (conteudo.Count != 0)                // se há elementos na lista retornada
+                    foreach (Cidade cidade in conteudo) // para cada objeto Cidade na lista retornada
+                    {
+                        // calculamos as coordenadas da cidade no mapa
+                        float x = (float)Math.Round(pbMapa.Width * cidade.X);
+                        float y = (float)Math.Round(pbMapa.Height * cidade.Y);
+
+                        // define o nome da cidade para colocá-la no mapa
+                        string nomeCidade = cidade.Chave;
+
+                        // define a fonte da cidade
+                        Font fonte = new Font("Sans Serif", tamanhoDaFonte);
+
+                        // define objeto para "pintar" as figuras que serão desenhados no mapa
+                        SolidBrush brush = new SolidBrush(Color.Black);
+
+                        // desenha uma ellipse nas coordenadas (x,y) de largura 5px e altura 5px
+                        e.Graphics.FillEllipse(brush, x, y, 5, 5);
+
+                        // escreve o nome da cidade no mapa nas coordenadas (x,y) usando a fonte e a cor definidas anteriormente
+                        e.Graphics.DrawString(nomeCidade, fonte, brush, x, y);
+                    }
+            }
+        }
+
+        // método que percorre o conteúdo da tabela e lista no ListBox
+        private void ListarNoListBox()
+        {
+            lsbCidades.Items.Clear();
+            List<Cidade> conteudo = tabela.Conteudo();
+
+            foreach (Cidade cid in conteudo)
+                lsbCidades.Items.Add(cid);
         }
 
         /////////////// Projeto Caminhos em Marte ///////////////

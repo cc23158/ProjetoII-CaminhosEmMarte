@@ -1,4 +1,4 @@
-Acheron        Arena          1
+Acheron        Arena          100
 Acheron        Echus Overlook 2300
 Arrakeen       Gondor         3500
 Bradbury       Odessa         4800

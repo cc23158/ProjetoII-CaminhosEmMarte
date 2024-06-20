@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+Keven Richard da Rocha Barreiros - 23143
+Victor Yuji Mimura - 23158
+*/
 
-public interface IRegistro<Tipo>
+using System;
+using System.IO;
+
+public interface IRegistro<Tipo> where Tipo : IComparable<Tipo>
 {
   void LerRegistro(StreamReader arquivo);
   void GravarDados(StreamWriter arquivo);

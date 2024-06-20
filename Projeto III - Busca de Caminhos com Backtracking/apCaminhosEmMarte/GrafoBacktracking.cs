@@ -1,4 +1,9 @@
-﻿// https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netframework-4.8 -> Linha 164
+﻿/*
+Keven Richard da Rocha Barreiros - 23143
+Victor Yuji Mimura               - 23158
+*/
+
+// https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netframework-4.8 -> Linha 177
 
 using apCaminhosEmMarte;
 using System;
@@ -278,79 +283,22 @@ namespace apCidadesBacktracking
 
             matriz[linha, coluna] = Convert.ToInt32(distancia);
         }
+
+        public void GravarDados(StreamWriter arquivo)
+        {
+            // percorremos todas as informações do grafo e gravamos no arquivo .txt
+            for (int linha = 0; linha < qtasCidades; linha++)
+                for (int coluna = 0; coluna < qtasCidades; coluna++)
+                    if (matriz[linha, coluna] != 0)
+                    {
+                        string origem = nomeCidades[linha];
+                        string destino = nomeCidades[coluna];
+                        string distancia = matriz[linha, coluna].ToString();
+
+                        arquivo.WriteLine($"{origem}{destino}{distancia}");
+                    }
+
+            arquivo.Close();
+        }
     }
 }
-/*
-// variáveis que armazenarão os caminhos
-            List<PilhaVetor<Movimento>> listaDeCaminhos = new List<PilhaVetor<Movimento>>();
-            PilhaVetor<Movimento> pilha = new PilhaVetor<Movimento>();
-
-            bool[] passou = new bool[qtasCidades];
-            int cidadeAtual, saidaAtual;
-
-            // inicia os valores de "passou" pois ainda não foi em nenhuma cidade
-            for (int indice = 0; indice < qtasCidades; indice++)
-                passou[indice] = false;
-
-            cidadeAtual = origem;
-            saidaAtual = 0;
-
-            // enquanto não lermos todas as possíveis rotas entre a linha e a coluna
-            while (saidaAtual <= qtasCidades)
-            {
-                while (saidaAtual < qtasCidades)
-                {
-
-
-                    // se chegamos ao destino
-                    if (saidaAtual == destino && matriz[cidadeAtual, saidaAtual] != 0)
-                    {
-                        // criamos o movimento
-                        // empilhamos o movimento
-                        // inserimos o caminho na lista
-                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
-                        pilha.Empilhar(movim);
-
-                        // adiciona uma cópia da pilha atual à lista de caminhos para que sejam retornadas as rotas corretamente
-                        PilhaVetor<Movimento> caminhoEncontrado = ClonarPilha(pilha);
-                        listaDeCaminhos.Add(caminhoEncontrado);                        
-
-                        break;
-                    }
-
-                    // se não tem nada
-                    else if (matriz[cidadeAtual, saidaAtual] == 0)
-                        saidaAtual++;
-
-                    // se já passou na próxima cidade
-                    else if (passou[saidaAtual])
-                        saidaAtual++;
-
-                    else
-                    {
-                        Movimento movim = new Movimento(cidadeAtual, saidaAtual);
-                        pilha.Empilhar(movim);
-                        passou[cidadeAtual] = true;
-                        cidadeAtual = saidaAtual; // muda para a nova cidade
-                        saidaAtual = 0; // reinicia busca de saídas da nova
-                                        // cidade a partir da primeira cidade
-                    }
-                }
-
-                // caso não haja mais possíveis caminhos a serem tentados, voltamos uma cidade
-                if (pilha.Tamanho > 0)
-                {
-                    // volta uma cidadeAtual para verificar outros caminhos
-                    Movimento movimento = pilha.Desempilhar();
-                    cidadeAtual = movimento.Origem;
-                    saidaAtual = movimento.Destino + 1;
-                    passou[cidadeAtual] = false; // marca a cidade atual como não visitada
-                }
-
-                // se terminamos de ler todas as possibilidades possíveis, retornamos a lista de caminhos
-                else if (saidaAtual == qtasCidades)
-                    break;
-            }
-
-            return listaDeCaminhos; 
-*/

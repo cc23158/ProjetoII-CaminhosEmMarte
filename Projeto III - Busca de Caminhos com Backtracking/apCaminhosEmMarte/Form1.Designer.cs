@@ -96,7 +96,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(824, 465);
             this.tabControl1.TabIndex = 0;
-            this.tabControl1.Enter += new System.EventHandler(this.tabControl1_Enter);
             // 
             // tpCidades
             // 
@@ -133,11 +132,13 @@
             this.pbMapa.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbMapa.TabIndex = 12;
             this.pbMapa.TabStop = false;
+            this.pbMapa.Paint += new System.Windows.Forms.PaintEventHandler(this.pbMapa_Paint);
             // 
             // lsbCidades
             // 
-            this.lsbCidades.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lsbCidades.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lsbCidades.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lsbCidades.FormattingEnabled = true;
             this.lsbCidades.ItemHeight = 14;
@@ -156,6 +157,7 @@
             this.btnListar.Size = new System.Drawing.Size(40, 30);
             this.btnListar.TabIndex = 10;
             this.btnListar.UseVisualStyleBackColor = true;
+            this.btnListar.Click += new System.EventHandler(this.btnListar_Click);
             // 
             // btnBuscar
             // 
@@ -165,6 +167,7 @@
             this.btnBuscar.Size = new System.Drawing.Size(40, 30);
             this.btnBuscar.TabIndex = 9;
             this.btnBuscar.UseVisualStyleBackColor = true;
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
             // btnRemover
             // 
@@ -174,6 +177,7 @@
             this.btnRemover.TabIndex = 8;
             this.btnRemover.Text = "-";
             this.btnRemover.UseVisualStyleBackColor = true;
+            this.btnRemover.Click += new System.EventHandler(this.btnRemover_Click);
             // 
             // btnInserir
             // 
@@ -183,6 +187,7 @@
             this.btnInserir.TabIndex = 7;
             this.btnInserir.Text = "+";
             this.btnInserir.UseVisualStyleBackColor = true;
+            this.btnInserir.Click += new System.EventHandler(this.btnInserir_Click);
             // 
             // udY
             // 
@@ -484,7 +489,6 @@
             // dlgAbrir
             // 
             this.dlgAbrir.DefaultExt = "*.txt";
-            this.dlgAbrir.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // dlgAbrirCidades
             // 
@@ -511,7 +515,6 @@
             this.Name = "FrmCaminhos";
             this.Text = "Caminhos em Marte - 23143 - 23158";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmCaminhos_FormClosing);
-            this.Load += new System.EventHandler(this.FrmCaminhos_Load);
             this.tabControl1.ResumeLayout(false);
             this.tpCidades.ResumeLayout(false);
             this.tpCidades.PerformLayout();
