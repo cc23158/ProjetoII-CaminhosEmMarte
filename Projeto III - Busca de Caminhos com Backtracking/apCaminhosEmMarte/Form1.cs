@@ -326,16 +326,25 @@ namespace apCaminhosEmMarte
 
         private void btnBuscarCaminho_Click(object sender, EventArgs e)
         {
-            // pegamos as cidades de origem e destino e buscamos os caminhos e
-            // buscamos todos os caminhos possíveis entre as cidades selecionadas
-            // e depois verificamos qual é o menor caminho dentre os achados
-            caminhos = grafo.BuscarTodosOsCaminhos(cbxOrigem.SelectedIndex, cbxDestino.SelectedIndex);
-            menorRota = CalcularMenorRota(caminhos);
-
-            // exibimos a menorRota também em um DataGridView separado
-            AtualizarTela(dgvMelhorCaminho, menorRota);
-            AtualizarTela(dgvCaminhos, caminhos);
-            DesenharMelhorCaminho();
+            //se as cidades de origem e destino são iguais, não será
+            //produzida uma rota
+            if(cbxOrigem == cbxDestino)
+            {
+                MessageBox.Show("Não é possível criar uma rota entre a cidade e si. Selecione cidades diferentes para origem e destino");
+            }
+            else
+            {
+                // pegamos as cidades de origem e destino e buscamos os caminhos e
+                // buscamos todos os caminhos possíveis entre as cidades selecionadas
+                // e depois verificamos qual é o menor caminho dentre os achados
+                caminhos = grafo.BuscarTodosOsCaminhos(cbxOrigem.SelectedIndex, cbxDestino.SelectedIndex);
+                PilhaVetor<Movimento> menorRota = CalcularMenorRota(caminhos);
+            
+                // exibimos a menorRota também em um DataGridView separado
+                AtualizarTela(dgvMelhorCaminho, menorRota);
+                AtualizarTela(dgvCaminhos, caminhos);
+                DesenharMelhorCaminho();
+            }
         }
 
         private void dgvCaminhos_CellClick(object sender, DataGridViewCellEventArgs e)
