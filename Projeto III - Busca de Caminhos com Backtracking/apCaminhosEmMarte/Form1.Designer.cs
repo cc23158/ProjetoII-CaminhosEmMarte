@@ -333,6 +333,7 @@
             this.dgvMelhorCaminho.Name = "dgvMelhorCaminho";
             this.dgvMelhorCaminho.Size = new System.Drawing.Size(517, 70);
             this.dgvMelhorCaminho.TabIndex = 15;
+            this.dgvMelhorCaminho.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMelhorCaminho_CellClick);
             // 
             // groupBox2
             // 
@@ -489,22 +490,27 @@
             // dlgAbrir
             // 
             this.dlgAbrir.DefaultExt = "*.txt";
+            this.dlgAbrir.Title = "Arquivo de cidades";
             // 
             // dlgAbrirCidades
             // 
             this.dlgAbrirCidades.FileName = "openFileDialog1";
+            this.dlgAbrirCidades.Title = "Abrir arquivo de cidades";
             // 
             // dlgAbrirCaminhos
             // 
             this.dlgAbrirCaminhos.FileName = "openFileDialog1";
+            this.dlgAbrirCaminhos.Title = "Abrir arquivos de caminhos";
             // 
             // dlgFecharCaminho
             // 
             this.dlgFecharCaminho.FileName = "openFileDialog1";
+            this.dlgFecharCaminho.Title = "Arquivo para gravar caminhos";
             // 
             // dlgFecharCidade
             // 
             this.dlgFecharCidade.FileName = "openFileDialog2";
+            this.dlgFecharCidade.Title = "Arquivo para gravar cidades";
             // 
             // FrmCaminhos
             // 

@@ -227,9 +227,11 @@ namespace apCaminhosEmMarte
         // criamos variável para saber a menor distância e consequentemente, menor caminho
         // criamos variável para saber todos os possíveis caminhos
         // criamos variável para armazenar o caminho a ser desenhado no mapa
+        // criamos variável para armazenar o caminho mais curto
         int menorDistancia = Int32.MaxValue;
         List<PilhaVetor<Movimento>> caminhos = null;
         List<(int origem, int destino)> linhaAerea = null;
+        PilhaVetor<Movimento> menorRota = null;
 
         private void tpCaminhos_Enter(object sender, EventArgs e)
         {
@@ -265,6 +267,7 @@ namespace apCaminhosEmMarte
                 CopiarNomes(cbxOrigem);
                 CopiarNomes(cbxDestino);
                 AtualizarTela(dgvCaminhos);
+                pbMapa2.Invalidate();
             }
         }
 
@@ -327,7 +330,7 @@ namespace apCaminhosEmMarte
             // buscamos todos os caminhos possíveis entre as cidades selecionadas
             // e depois verificamos qual é o menor caminho dentre os achados
             caminhos = grafo.BuscarTodosOsCaminhos(cbxOrigem.SelectedIndex, cbxDestino.SelectedIndex);
-            PilhaVetor<Movimento> menorRota = CalcularMenorRota(caminhos);
+            menorRota = CalcularMenorRota(caminhos);
 
             // exibimos a menorRota também em um DataGridView separado
             AtualizarTela(dgvMelhorCaminho, menorRota);
@@ -352,6 +355,37 @@ namespace apCaminhosEmMarte
                 List<Movimento> caminhoSelecionado = caminhos[indexRota].Conteudo();
 
                 foreach (Movimento movim in caminhoSelecionado)
+                    linhaAerea.Add((movim.Origem, movim.Destino));
+
+                pbMapa2.Invalidate();
+            }
+
+            // se estamos com o DataGridView configurado para
+            // a exibição dos dados do arquivo .txt
+            else
+            {
+                // configura os comboBoxes de acordo com a célula clicada
+                cbxOrigem.SelectedIndex = e.RowIndex;
+                cbxDestino.SelectedIndex = e.ColumnIndex;
+            }
+        }
+
+        private void dgvMelhorCaminho_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // se estamos com o DataGridView configurado para
+            // a exibição dos caminhos encontrados
+            if (dgvMelhorCaminho.Columns.Count == 1 && menorRota != null)
+            {
+                // limpamos os dados da linha aérea
+                // selecionamos o índice da rota clicada
+                // identificamos a rota na lista de caminhos
+                // preenchemos a linha aérea com as cidades
+                // chamamos a função de desenhar a linha no mapa
+
+                linhaAerea = new List<(int origem, int destino)>();
+                
+
+                foreach (Movimento movim in menorRota.Conteudo())
                     linhaAerea.Add((movim.Origem, movim.Destino));
 
                 pbMapa2.Invalidate();
@@ -442,13 +476,44 @@ namespace apCaminhosEmMarte
 
         private void pbMapa2_Paint(object sender, PaintEventArgs e)
         {
+            // se estamos criando o mapa, desenhamos as cidades
+            if (asCidades.Length > 0)
+            {
+                // variável do tamanho da fonte da cidade
+                const float tamanhoDaFonte = 8.25f;
+
+                foreach (Cidade cidade in asCidades) // para cada objeto Cidade na lista retornada
+                    if (cidade != null)
+                    {
+                        // calculamos as coordenadas da cidade no mapa
+                        float x = (float)Math.Round(pbMapa2.Width * cidade.X);
+                        float y = (float)Math.Round(pbMapa2.Height * cidade.Y);
+
+                        // define o nome da cidade para colocá-la no mapa
+                        string nomeCidade = cidade.Chave;
+
+                        // define a fonte da cidade
+                        Font fonte = new Font("Sans Serif", tamanhoDaFonte);
+
+                        // define objeto para "pintar" as figuras que serão desenhados no mapa
+                        SolidBrush brush2 = new SolidBrush(Color.Black);
+
+                        // desenha uma ellipse nas coordenadas (x,y) de largura 5px e altura 5px
+                        e.Graphics.FillEllipse(brush2, x, y, 5, 5);
+
+                        // escreve o nome da cidade no mapa nas coordenadas (x,y) usando a fonte e a cor definidas anteriormente
+                        e.Graphics.DrawString(nomeCidade, fonte, brush2, x, y);
+                    }
+            }
+
+
             // se o mapa ainda não foi criado e portanto linhaAerea
             // é nula, então não podemos desenhar nada
             if (linhaAerea == null)
                 return;
 
             // objetos de desenho
-            SolidBrush brush = new SolidBrush(Color.Black);
+            SolidBrush brush = new SolidBrush(Color.Blue);
             Pen pen = new Pen(brush, 2);
 
             // desenhamos a linha aérea
