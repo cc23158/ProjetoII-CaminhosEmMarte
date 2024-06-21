@@ -328,7 +328,7 @@ namespace apCaminhosEmMarte
         {
             //se as cidades de origem e destino são iguais, não será
             //produzida uma rota
-            if(cbxOrigem == cbxDestino)
+            if(cbxOrigem.SelectedIndex == cbxDestino.SelectedIndex)
             {
                 MessageBox.Show("Não é possível criar uma rota entre a cidade e si. Selecione cidades diferentes para origem e destino");
             }
